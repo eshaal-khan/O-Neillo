@@ -60,10 +60,12 @@
             this.lsbAboutGame.ItemHeight = 31;
             this.lsbAboutGame.Items.AddRange(new object[] {
             "The O\'Neillo game was developed as part of a Programming ",
-            "Fundamentals assignment at Sheffield Hallam University.",
+            "Fundamentals assignment at Sheffield Hallam University and",
+            "named after the lecturer, Peter O\'Neil.",
             "The provided GameBoardImageArray.cs has been used",
             "and edited to fit the requirements of the game and ",
-            "assignment. The game logic has been written independently."});
+            "assignment. The game logic, plus the code for saving and",
+            "restoring game states has been written independently."});
             this.lsbAboutGame.Location = new System.Drawing.Point(761, 120);
             this.lsbAboutGame.Name = "lsbAboutGame";
             this.lsbAboutGame.Size = new System.Drawing.Size(782, 531);
@@ -92,7 +94,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmAbout";
-            this.Text = "About";
+            this.Text = "About O\'Neillo";
             this.Load += new System.EventHandler(this.frmAbout_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbxAbout)).EndInit();
             this.ResumeLayout(false);

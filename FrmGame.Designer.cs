@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmGame));
-            this.lblMessage = new System.Windows.Forms.Label();
             this.msMenu = new System.Windows.Forms.MenuStrip();
             this.gameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.restoreGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.informationPanelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.speakToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -56,15 +56,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbxBlackIcon)).BeginInit();
             this.SuspendLayout();
             // 
-            // lblMessage
-            // 
-            this.lblMessage.AutoSize = true;
-            this.lblMessage.Location = new System.Drawing.Point(11, 67);
-            this.lblMessage.Name = "lblMessage";
-            this.lblMessage.Size = new System.Drawing.Size(92, 32);
-            this.lblMessage.TabIndex = 0;
-            this.lblMessage.Text = "label1";
-            // 
             // msMenu
             // 
             this.msMenu.BackColor = System.Drawing.Color.LightBlue;
@@ -77,7 +68,7 @@
             this.msMenu.Location = new System.Drawing.Point(0, 0);
             this.msMenu.Name = "msMenu";
             this.msMenu.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.msMenu.Size = new System.Drawing.Size(987, 49);
+            this.msMenu.Size = new System.Drawing.Size(987, 60);
             this.msMenu.TabIndex = 1;
             this.msMenu.Text = "msMenu";
             // 
@@ -86,28 +77,41 @@
             this.gameToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newGameToolStripMenuItem,
             this.saveGameToolStripMenuItem,
-            this.exitGameToolStripMenuItem});
+            this.exitGameToolStripMenuItem,
+            this.restoreGameToolStripMenuItem});
             this.gameToolStripMenuItem.Name = "gameToolStripMenuItem";
-            this.gameToolStripMenuItem.Size = new System.Drawing.Size(120, 45);
+            this.gameToolStripMenuItem.Size = new System.Drawing.Size(120, 56);
             this.gameToolStripMenuItem.Text = "Game";
             // 
             // newGameToolStripMenuItem
             // 
             this.newGameToolStripMenuItem.Name = "newGameToolStripMenuItem";
-            this.newGameToolStripMenuItem.Size = new System.Drawing.Size(331, 54);
+            this.newGameToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.newGameToolStripMenuItem.Text = "New Game";
+            this.newGameToolStripMenuItem.Click += new System.EventHandler(this.newGameToolStripMenuItem_Click);
             // 
             // saveGameToolStripMenuItem
             // 
             this.saveGameToolStripMenuItem.Name = "saveGameToolStripMenuItem";
-            this.saveGameToolStripMenuItem.Size = new System.Drawing.Size(331, 54);
+            this.saveGameToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.saveGameToolStripMenuItem.Text = "Save Game";
+            this.saveGameToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.saveGameToolStripMenuItem_DropDownItemClicked);
+            this.saveGameToolStripMenuItem.Click += new System.EventHandler(this.saveGameToolStripMenuItem_Click);
             // 
             // exitGameToolStripMenuItem
             // 
             this.exitGameToolStripMenuItem.Name = "exitGameToolStripMenuItem";
-            this.exitGameToolStripMenuItem.Size = new System.Drawing.Size(331, 54);
+            this.exitGameToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.exitGameToolStripMenuItem.Text = "Exit Game";
+            this.exitGameToolStripMenuItem.Click += new System.EventHandler(this.exitGameToolStripMenuItem_Click);
+            // 
+            // restoreGameToolStripMenuItem
+            // 
+            this.restoreGameToolStripMenuItem.Name = "restoreGameToolStripMenuItem";
+            this.restoreGameToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
+            this.restoreGameToolStripMenuItem.Text = "Restore Game";
+            this.restoreGameToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.restoreGameToolStripMenuItem_DropDownItemClicked);
+            this.restoreGameToolStripMenuItem.Click += new System.EventHandler(this.restoreGameToolStripMenuItem_Click);
             // 
             // settingsToolStripMenuItem
             // 
@@ -115,7 +119,7 @@
             this.informationPanelToolStripMenuItem,
             this.speakToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(149, 45);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(149, 56);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
             // informationPanelToolStripMenuItem
@@ -139,7 +143,7 @@
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(104, 45);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(104, 56);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // aboutToolStripMenuItem
@@ -268,7 +272,6 @@
             this.Controls.Add(this.txtPlayer2);
             this.Controls.Add(this.txtPlayer1);
             this.Controls.Add(this.pbxPanel);
-            this.Controls.Add(this.lblMessage);
             this.Controls.Add(this.msMenu);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -290,8 +293,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Label lblMessage;
         private System.Windows.Forms.MenuStrip msMenu;
         private System.Windows.Forms.ToolStripMenuItem gameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
@@ -312,6 +313,7 @@
         private System.Windows.Forms.Label lblP1Tokens;
         private System.Windows.Forms.Button btnStartGame;
         private System.Windows.Forms.Label lblPlayer2Turn;
+        private System.Windows.Forms.ToolStripMenuItem restoreGameToolStripMenuItem;
     }
 }
 
