@@ -8,18 +8,34 @@ using System.IO;
 
 namespace O_Neillo
 {
+    /// <summary>
+    /// Class <c>SaveGame</c> used to specify the attributes and methods of SaveGame objects
+    /// A SaveGame object stores the data related to a game state, either for saving a game state or restoring a previously saved one
+    /// </summary>
     public class SaveGame
     {
+        //attributes which the SaveGame object consists of (i.e. all data which needs to be stored or restored about a game state)
         public string p1Name;
         public string p2Name;
         public int p1TokenNum;
         public int p2TokenNum;
-        public int nextPlayerNum; // will be worked out from current state of label
+        public int nextPlayerNum;
         public bool speechTicked;
         public bool infoPanelTicked;
         public int[,] boardState;
         public string selectedFile;
-        //need some way of obtaining name of the file option user chooses (gameFile1ToolStripMenuItem.Text will be first part of the .WriteAllText line)
+        /// <summary>
+        /// Method <c>SaveGame</c> constructor for SaveGame class
+        /// </summary>
+        /// <param name="p1Name"></param>
+        /// <param name="p2Name"></param>
+        /// <param name="p1TokenNum"></param>
+        /// <param name="p2TokenNum"></param>
+        /// <param name="nextPlayerNum"></param>
+        /// <param name="speechTicked"></param>
+        /// <param name="infoPanelTicked"></param>
+        /// <param name="boardState"></param>
+        /// <param name="selectedFile"></param>
         public SaveGame(string p1Name, string p2Name, int p1TokenNum, int p2TokenNum, int nextPlayerNum, bool speechTicked, bool infoPanelTicked,int[,] boardState, string selectedFile)
         {
             this.p1Name = p1Name;
@@ -32,9 +48,14 @@ namespace O_Neillo
             this.boardState = boardState;
             this.selectedFile = selectedFile;
         }
+        /// <summary>
+        /// Method <c>writeData</c> receives SaveGame object and serializes it to store the game state
+        /// Used in FrmGame.cs
+        /// </summary>
+        /// <param name="gameData"></param>
         public void writeData(SaveGame gameData)
         {
-            string stringComposite = JsonConvert.SerializeObject(gameData, Formatting.Indented); //passing in object to serialize, .indented = formats Json string to be in brackets
+            string stringComposite = JsonConvert.SerializeObject(gameData, Formatting.Indented); //pass in SaveGame object to serialize
             File.WriteAllText(gameData.selectedFile, stringComposite);
         }
     }

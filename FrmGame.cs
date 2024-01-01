@@ -18,24 +18,38 @@ namespace O_Neillo
 {
     public partial class FrmGame : Form
     {
-        //instantiates board & sets starting values for each tile of the board
+        //set initial values for each board tile, instantiate player-related variables
         GameboardImageArray board;
         int[,] boardData = { { 10, 10, 10, 10, 10, 10, 10, 10 }, { 10, 10, 10, 10, 10, 10, 10, 10 },{ 10, 10, 10, 10, 10, 10, 10, 10 },
             {10,10,10,1,0,10,10,10},{ 10, 10, 10, 0, 1, 10, 10, 10 },{ 10, 10, 10, 10, 10, 10, 10, 10 },
             { 10, 10, 10, 10, 10, 10, 10, 10 },{ 10, 10, 10, 10, 10, 10, 10, 10 } };
-        //sets up variables which will store player names
         string player1Name;
         string player2Name;
         int currentPlayer = 0;
-        public string fileName { get; set; } //used to get name under which user wants to save name
-        private void FrmGame_Load(object sender, EventArgs e) //loads images & sets player1 as starting player
+
+        //public attribute used later for attaining name when saving a game
+        public string fileName { get; set; }
+
+        /// <summary>
+        /// Method <c>FrmGame_Load</c> loads and sets the elements needed for the start of the game (images for the picture boxes
+        /// , shows the start game button, indicates that player#1 is starting)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FrmGame_Load(object sender, EventArgs e)
         {
             pbxWhiteIcon.Image = Image.FromFile(@"images\pbxWhite.PNG");
             pbxBlackIcon.Image = Image.FromFile(@"images\pbxBlack.PNG");
             lblPlayer2Turn.Hide();
             btnStartGame.Show();
         }
-        private void btnStartGame_Click(object sender, EventArgs e) //sets player names & makes textboxes read-only
+        /// <summary>
+        /// Method <c>btnStartGame_Click</c> stores the entered player names into their respective variables (Player #1 and Player #2 if they are left blank),
+        /// makes the textboxes read-only and hides the button to indicate the game starting
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnStartGame_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(txtPlayer1.Text))
             {
@@ -51,12 +65,23 @@ namespace O_Neillo
             txtPlayer2.ReadOnly = true;
             btnStartGame.Hide();
         }
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e) //opens about page
+        /// <summary>
+        /// Method <c>aboutToolStripMenuItem_Click</c> opens the about page (frmAbout) when that option is selected from the sub menu of 'Help' on the menu strip
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmAbout aboutPage = new frmAbout();
             aboutPage.ShowDialog();
         }
-        private void informationPanelToolStripMenuItem_Click(object sender, EventArgs e) //hiding & showing info panel depending on state to checkbox
+        /// <summary>
+        /// Method<c>informationPanelToolStripMenuItem_Click</c> hides and shows the information panel elements depending on the state of the checkbox
+        /// (checked = show all the elements, unchecked= hide all the elements)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void informationPanelToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (informationPanelToolStripMenuItem.Checked == true)
             {
@@ -85,7 +110,13 @@ namespace O_Neillo
                 pbxPanel.Show();
             }
         }
-        private void speakToolStripMenuItem_Click(object sender, EventArgs e) //Speech.Synthesis code will go here
+        /// <summary>
+        /// Method <c>speakToolStripMenuItem_Click</c> turns the speech function on and off depending on state of the checkbox and if it is on,
+        /// it will read a message indicating it is on
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void speakToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (speakToolStripMenuItem.Checked == true)
             {
@@ -99,7 +130,14 @@ namespace O_Neillo
                     "the row and column number of the space where they have placed will be read out");
             }
         }
-        public FrmGame() //sets inital display & view of all elements -> labels, board, textboxes, speech & panel options, drop down file names
+        /// <summary>
+        /// Method <c>FrmGame</c> opens the main game form, which includes several things. It retrieves the names of the currently stored game states to display
+        /// on the save game sub-menu (for overwriting) and restore game sub-menu, it also sets the initial values for elements including the textboxes,
+        /// labels used to count the amount of coloured tokens and showing/hiding the correct labels to indicate that Player 1 starts.
+        /// It will ensure both textboxes are intially not read-only, and also creates a new GameBoardImageArray object to show the board, and sets up the
+        /// TileClicked event. It also includes some exception handling to manage errors with the size.
+        /// </summary>
+        public FrmGame() //set inital display & view of all elements -> labels, board, textboxes, speech & panel options, drop down file names
         {
             InitializeComponent();
             string pathToJsonFiles = Directory.GetCurrentDirectory();
@@ -127,20 +165,24 @@ namespace O_Neillo
             string pathToImages = Directory.GetCurrentDirectory() + @"\images\";
             try
             {
-                //creates board
                 board = new GameboardImageArray(this, boardData, bottomRightConnerFromFormSides, bottomRightConnerFromFormSides, 5, pathToImages);
-                //creates new tile clicked event every time a tile is clicked
                 board.TileClicked += new GameboardImageArray.TileClickedEventDelegate(BoardTileClicked);
-                //updates board display based on changes made due to tile being clicked, uses boardData 2D array
                 board.UpdateBoardGui(boardData);
             }
-            catch (Exception exception) //will run when the size for board set isn't compatible
+            catch (Exception exception)
             {
                 DialogResult result = MessageBox.Show(exception.ToString(), "Game board size problem", MessageBoxButtons.OK);
                 this.Close();
             }
         }
 
+        /// <summary>
+        /// Method <c>BoardTileClicked</c> gets the row and column index of the clicked tile using the GetCurrentRowIndex and GetCurrentColumnInex methods
+        /// for GameBoardImageArray objects, these are passed through along with the current player to CheckValidityAndMakeMove. After this is run, the method
+        /// runs SwapTurn
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void BoardTileClicked(object sender, EventArgs e) //when tile is clicked
         {
             int clickedRowIndex = board.GetCurrentRowIndex(sender);
@@ -148,7 +190,24 @@ namespace O_Neillo
             CheckValidityAndMakeMove(clickedRowIndex, clickedColIndex, currentPlayer);
             SwapTurn();
         }
-        public void CheckValidityAndMakeMove(int row, int col, int currentPlayer) //will change the state of the board if the tile clicked is a valid move
+        /// <summary>
+        /// Method <c>CheckValidityAndMakeMove</c> uses the row and column values, plus the current player to check if the clicked square is a valid move
+        /// and if so, it identifies and commits the changes which need to be made to the board. The following comments describe key structures/steps in the method chronologically
+        /// The adjacentSpacesToCheck array stores the co-ordinates of all tiles adjacent to the one clicked. 
+        /// If the square clicked is a black or white tile, the move cannot be made. 
+        /// If the square clicked has an adjacent empty space or if it has a square of the current player's, the move cannot be made in the direction of the adjacent space checked
+        /// A list of 2D arrays is then used to store the co-ordinates of all the tiles visited in the valid directions identified. The program continues to
+        /// visit tiles in a direction, until an empty tile or end of the board is reached (both cases = not a valid move)
+        /// OR until a tile of the current player's tile colour is reached AFTER a consecutive line of opponent tiles (co-ordinates stored in spacesWithOpposingColour list of 2D arrays)
+        /// , in which case the move is valid.
+        /// When the move is valid, if the speak checkbox is ticked, it will read out the player and where they have placed. Then regardless of if speech is
+        /// active or not, a list of 2D arrays (spacesWithOpposingColour), the current player and row and column of the initial square clicked are passed
+        /// into FlipTokens. Once this has been run,UpdateLabels and MoveLabel methods are executed, passing the current player in MoveLabel
+        /// </summary>
+        /// <param name="row"></param> passed from BoardTileClicked 
+        /// <param name="col"></param> passed from BoardTileClicked
+        /// <param name="currentPlayer"></param> passed from BoardTileClicked
+        public void CheckValidityAndMakeMove(int row, int col, int currentPlayer) //change the state of the board if the tile clicked is a valid move
         {
             bool validMove;
             int opposingPlayer;
@@ -160,24 +219,23 @@ namespace O_Neillo
             {
                 opposingPlayer = 0;
             }
-            int clickedSquareValue = boardData[row, col]; //gets the colour of the starting point tile         
-            //stores the address of each of the places that need to be investigated
+            int clickedSquareValue = boardData[row, col];
             int[,] adjacentSpacesToCheck = { { row, col - 1 }, { row, col + 1 },
             { row + 1, col }, { row - 1, col },
             { row - 1, col - 1 }, { row + 1, col + 1 },
             { row + 1, col - 1 }, { row - 1, col + 1 } };
-            if (clickedSquareValue == 1 || clickedSquareValue == 0) //if they click on a square which contains a coloured token -> can't place a token on top of another token
+            if (clickedSquareValue == 1 || clickedSquareValue == 0)
             {
                 validMove = false;
             }
             else
             {
-                for (int i = 0; i < 8; i++) //num. of times it repeats = num. of items in spacesToCheck
+                for (int i = 0; i < 8; i++)
                 {
                     if (adjacentSpacesToCheck[i, 0] >= 0 && adjacentSpacesToCheck[i, 0] <= 7 && adjacentSpacesToCheck[i, 1] >= 0 && adjacentSpacesToCheck[i, 1] <= 7)
                     {
                         int[,] newSquare = new int[1, 2];
-                        if (boardData[adjacentSpacesToCheck[i, 0], adjacentSpacesToCheck[i, 1]] == 10 || boardData[adjacentSpacesToCheck[i, 0], adjacentSpacesToCheck[i, 1]] == 11)
+                        if (boardData[adjacentSpacesToCheck[i, 0], adjacentSpacesToCheck[i, 1]] == 10)
                         {
                             validMove = false;
                         }
@@ -185,15 +243,15 @@ namespace O_Neillo
                         {
                             validMove = false;
                         }
-                        else //if square after empty one is of opposing colour
+                        else
                         {
-                            int[,] direction = new int[1, 2]; //stores direction in which opposing colour was found
+                            int[,] direction = new int[1, 2];
                             direction[0, 0] = adjacentSpacesToCheck[i, 0] - row;
                             direction[0, 1] = adjacentSpacesToCheck[i, 1] - col;
                             List<int[,]> spacesWithOpposingColour = new List<int[,]>();
-                            while (adjacentSpacesToCheck[i, 0] >= 0 && adjacentSpacesToCheck[i, 0] <= 7 && adjacentSpacesToCheck[i, 1] >= 0 && adjacentSpacesToCheck[i, 1] <= 7) //boundary of board
+                            while (adjacentSpacesToCheck[i, 0] >= 0 && adjacentSpacesToCheck[i, 0] <= 7 && adjacentSpacesToCheck[i, 1] >= 0 && adjacentSpacesToCheck[i, 1] <= 7)
                             {
-                                if (boardData[adjacentSpacesToCheck[i, 0], adjacentSpacesToCheck[i, 1]] == 10) //if they encounter an empty square in that direction aside from the initial adjacent one
+                                if (boardData[adjacentSpacesToCheck[i, 0], adjacentSpacesToCheck[i, 1]] == 10)
                                 {
                                     validMove = false;
                                     break;
@@ -235,8 +293,15 @@ namespace O_Neillo
                 }
             }
         }
-
-        public void FlipTokens(List<int[,]> spaces, int row, int col, int currentPlayer) //changes values of tiles according to whose turn it is
+        /// <summary>
+        /// Method <c>FlipTokens</c> receives a list of spaces, the initially clicked tile co-ordinares and the current player.
+        /// It changes the value of the spaces to the colour of the current player's token, completing the player's move and showing it on the GUI
+        /// </summary>
+        /// <param name="spaces"></param> passed from CheckValidityAndMakeMove (spacesWithOpposingColour)
+        /// <param name="row"></param> passed from CheckValidityAndMakeMove
+        /// <param name="col"></param> passed from CheckValidityAndMakeMove
+        /// <param name="currentPlayer"></param> passed from CheckValidityAndMakeMove
+        public void FlipTokens(List<int[,]> spaces, int row, int col, int currentPlayer)
         {
             foreach (int[,] square in spaces)
             {
@@ -245,8 +310,13 @@ namespace O_Neillo
                 board.UpdateBoardGui(boardData);
             }
         }
-
-        public void UpdateLabels() //loops through whole board & updates counter values in labels
+        /// <summary>
+        /// Method <c>UpdateLabels</c> uses nested selection to loop through every tile on the board and check the value of each one.
+        /// If the tile is black, the counter for the black tokens is incremented, the same applies to if the tile is white.
+        /// After visiting all the tiles, the counter variable values are displayed via their respective labels.
+        /// Called when a move has been made as part of swapping the turn
+        /// </summary>
+        public void UpdateLabels()
         {
             int white = 0;
             int black = 0;
@@ -269,6 +339,9 @@ namespace O_Neillo
             lblP2Tokens.Text = Convert.ToString(white);
         }
 
+        /// <summary>
+        /// Method <c>SwapTurn</c> inverts the currentPlayer value to swap which player's turn it is
+        /// </summary>
         public void SwapTurn()
         {
             if (currentPlayer == 0)
@@ -281,7 +354,12 @@ namespace O_Neillo
             }
         }
 
-        public void MoveLabel(int currentPlayer) //hides & shows respective values to indicate whose turn it is
+        /// <summary>
+        /// Method <c>MoveLabel</c> uses the received currentPlayer value to hide and show the respective labels to indicate which player's turn it is
+        /// Called when a move has been made as part of swapping the turn
+        /// </summary>
+        /// <param name="currentPlayer"></param> passed from CheckValidityAndMakeMove
+        public void MoveLabel(int currentPlayer)
         {
             if (currentPlayer == 0)
             {
@@ -294,18 +372,17 @@ namespace O_Neillo
                 lblPlayer1Turn.Show();
             }
         }
-
-        public void BoardState() //gets current state of whole board
-        {
-            for (int i = 0; i <= 7; i++)
-            {
-                for (int j = 0; j <= 7; j++)
-                {
-                    boardData[i, j] = (boardData[i, j]);
-                }
-            }
-        }
-        private void saveGameToolStripMenuItem_Click(object sender, EventArgs e) //when player selects save option
+        /// <summary>
+        /// Method <c>saveGameToolStripMenuItem_Click</c> runs when the user wants to save the current game state.
+        /// If there are already 5 game states saved, the user is notified that they can only rewrite one and not create a new saved state.
+        /// Otherwise, FrmGameFileName is opened, where the user enters the name under which to save the game state (current date and time if empty).
+        /// This is returned to this form (FrmGame) and the data which needs to be saved is compiled into a new SaveGame object and written to a json file
+        /// using the writeData method is SaveGame.cs
+        /// The new game name is added to the restore game and save game sub-menus
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void saveGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (restoreGameToolStripMenuItem.DropDownItems.Count<5) 
             {
@@ -337,7 +414,13 @@ namespace O_Neillo
             }
         }
 
-        private void newGameToolStripMenuItem_Click(object sender, EventArgs e) //when player selects new game option
+        /// <summary>
+        /// Method <c>newGameToolStripMenuItem_Click</c> runs when the user selects the 'New Game' option on the menu strip. It asks the user to confirm.
+        /// Once they confirm, it will close the current game form, and open a new one with the starting settings and elements
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogResult result= MessageBox.Show("Are you sure you would like to start a new game? Any unsaved progress will be lost so ensure " +
                 "you have saved this game if you would like to return to it, if so click yes to start new game","Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -350,7 +433,13 @@ namespace O_Neillo
             }
         }
 
-        private void exitGameToolStripMenuItem_Click(object sender, EventArgs e) //when player selects exit game option
+       /// <summary>
+       /// Method <c>exitGameToolStripMenuItem_Click</c> runs when the user selects the 'Exit Game' option on the menu strip. It asks the user to confirm.
+       /// Once they confirm, the game form is closed
+       /// </summary>
+       /// <param name="sender"></param>
+       /// <param name="e"></param>
+        private void exitGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show("Are you sure you would like to exit? Any unsaved progress will be lost so ensure " +
                 "you have saved this game if you would like to return to it, if so click yes to exit.", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -360,6 +449,12 @@ namespace O_Neillo
             }
         }
 
+        /// <summary>
+        /// Method <c>restoreGameToolStripMenuItem_Click</c> runs when the user selects 'Restore Game' from the menu strip. If there are no game states saved,
+        /// it notifies the user.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void restoreGameToolStripMenuItem_Click(object sender, EventArgs e) //when player selects restore game option & theres no game states saved
         {
             if (restoreGameToolStripMenuItem.DropDownItems.Count == 0)
@@ -368,7 +463,15 @@ namespace O_Neillo
             }
         }
 
-        private void restoreGameToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e) //when player selects a game state from restore game sub-menu
+        /// <summary>
+        /// Method <c>restoreGameToolStripMenuItem_DropDownItemClicked</c> when the user selects a saved game to restore
+        /// The game data is retrieved and deserialized into a new SaveGame object, from which the data is read into elements on the new form for the restored game
+        /// Once the data is read into the elements and the components are correctly set, the current form is closed and a new instance of FrmGame
+        /// with the restored game data is shown
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void restoreGameToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             this.Hide();
             FrmGame NewGame = new FrmGame();
@@ -401,7 +504,14 @@ namespace O_Neillo
             this.Close();
         }
 
-        private void saveGameToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e) //when player selects game state from save game sub-menu
+        /// <summary>
+        /// Method <c>saveGameToolStripMenuItem_DropDownItemClicked</c> when the user selects the name of a saved game state to overwrite.
+        /// The user is asked to confirm, then the overwriting works by deleting the selected game state and creating a new one with the same name
+        /// It creates a new SaveGame object and game state with the same name as the one deleted and notifies user when completed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void saveGameToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e) //when player selects game state from save game sub-menu i.e. to overwrite
         {
             DialogResult result = MessageBox.Show("By selecting this option, you are overwriting the data of the selected file, the file name will remain the same. Please select yes to confirm this, select no to go back", "Confirmation", MessageBoxButtons.YesNo);
             if (result == DialogResult.Yes)
