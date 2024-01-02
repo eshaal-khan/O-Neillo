@@ -27,12 +27,12 @@ namespace O_Neillo
         string player2Name;
         int currentPlayer = 0;
 
-        //public attribute used later for attaining name when saving a game
+        //public attribute used later for attaining file name from FrmGameFileName when saving a game state
         public string fileName { get; set; }
 
         /// <summary>
-        /// Method <c>FrmGame_Load</c> loads and sets the elements needed for the start of the game (images for the picture boxes
-        /// , shows the start game button, indicates that player#1 is starting)
+        /// Method <c>FrmGame_Load</c> loads and sets the components needed for the start of the game 
+        /// (images for the picture boxes, shows the start game button, indicate that player#1 is starting)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -76,8 +76,8 @@ namespace O_Neillo
             aboutPage.ShowDialog();
         }
         /// <summary>
-        /// Method<c>informationPanelToolStripMenuItem_Click</c> hides and shows the information panel elements depending on the state of the checkbox
-        /// (checked = show all the elements, unchecked= hide all the elements)
+        /// Method<c>informationPanelToolStripMenuItem_Click</c> hides and shows the information panel components depending on the state of the checkbox
+        /// (checked = show all the components, unchecked= hide all the components)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -111,8 +111,8 @@ namespace O_Neillo
             }
         }
         /// <summary>
-        /// Method <c>speakToolStripMenuItem_Click</c> turns the speech function on and off depending on state of the checkbox and if it is on,
-        /// it will read a message indicating it is on
+        /// Method <c>speakToolStripMenuItem_Click</c> turns the speech function on and off depending on state of the checkbox.
+        /// If it is checked, it will read a message indicating it is on
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -132,12 +132,12 @@ namespace O_Neillo
         }
         /// <summary>
         /// Method <c>FrmGame</c> opens the main game form, which includes several things. It retrieves the names of the currently stored game states to display
-        /// on the save game sub-menu (for overwriting) and restore game sub-menu, it also sets the initial values for elements including the textboxes,
+        /// on the save game sub-menu (for overwriting) and restore game sub-menu, it also sets the initial values for components including the textboxes,
         /// labels used to count the amount of coloured tokens and showing/hiding the correct labels to indicate that Player 1 starts.
         /// It will ensure both textboxes are intially not read-only, and also creates a new GameBoardImageArray object to show the board, and sets up the
         /// TileClicked event. It also includes some exception handling to manage errors with the size.
         /// </summary>
-        public FrmGame() //set inital display & view of all elements -> labels, board, textboxes, speech & panel options, drop down file names
+        public FrmGame() //set inital display & view of all components -> labels, board, textboxes, speech & panel options, drop down file names
         {
             InitializeComponent();
             string pathToJsonFiles = Directory.GetCurrentDirectory();
@@ -204,10 +204,10 @@ namespace O_Neillo
         /// active or not, a list of 2D arrays (spacesWithOpposingColour), the current player and row and column of the initial square clicked are passed
         /// into FlipTokens. Once this has been run,UpdateLabels and MoveLabel methods are executed, passing the current player in MoveLabel
         /// </summary>
-        /// <param name="row"></param> passed from BoardTileClicked 
-        /// <param name="col"></param> passed from BoardTileClicked
-        /// <param name="currentPlayer"></param> passed from BoardTileClicked
-        public void CheckValidityAndMakeMove(int row, int col, int currentPlayer) //change the state of the board if the tile clicked is a valid move
+        /// <param name="row">passed from BoardTileClicked</param>  
+        /// <param name="col">passed from BoardTileClicked</param>
+        /// <param name="currentPlayer">passed from BoardTileClicked</param>
+        public void CheckValidityAndMakeMove(int row, int col, int currentPlayer)
         {
             bool validMove;
             int opposingPlayer;
@@ -297,10 +297,10 @@ namespace O_Neillo
         /// Method <c>FlipTokens</c> receives a list of spaces, the initially clicked tile co-ordinares and the current player.
         /// It changes the value of the spaces to the colour of the current player's token, completing the player's move and showing it on the GUI
         /// </summary>
-        /// <param name="spaces"></param> passed from CheckValidityAndMakeMove (spacesWithOpposingColour)
-        /// <param name="row"></param> passed from CheckValidityAndMakeMove
-        /// <param name="col"></param> passed from CheckValidityAndMakeMove
-        /// <param name="currentPlayer"></param> passed from CheckValidityAndMakeMove
+        /// <param name="spaces">passed from CheckValidityAndMakeMove (spacesWithOpposingColour)</param>
+        /// <param name="row">passed from CheckValidityAndMakeMove</param>
+        /// <param name="col">passed from CheckValidityAndMakeMove</param> passed from CheckValidityAndMakeMove
+        /// <param name="currentPlayer">passed from CheckValidityAndMakeMove</param>
         public void FlipTokens(List<int[,]> spaces, int row, int col, int currentPlayer)
         {
             foreach (int[,] square in spaces)
@@ -358,7 +358,7 @@ namespace O_Neillo
         /// Method <c>MoveLabel</c> uses the received currentPlayer value to hide and show the respective labels to indicate which player's turn it is
         /// Called when a move has been made as part of swapping the turn
         /// </summary>
-        /// <param name="currentPlayer"></param> passed from CheckValidityAndMakeMove
+        /// <param name="currentPlayer">passed from CheckValidityAndMakeMove</param>
         public void MoveLabel(int currentPlayer)
         {
             if (currentPlayer == 0)
@@ -400,13 +400,21 @@ namespace O_Neillo
                     enterFileNameForm.ShowDialog();
                     string sentData = fileName;
                 }
-                SaveGame gameData = new SaveGame(player1Name, player2Name, Convert.ToInt32(lblP1Tokens.Text), Convert.ToInt32(lblP2Tokens.Text), currentPlayer,speakToolStripMenuItem.Checked, informationPanelToolStripMenuItem.Checked, boardData, fileName);
-                gameData.writeData(gameData);
-                MessageBox.Show("File successfully saved!");
-                char[] charsToTrim = { '.', 'j', 's', 'o', 'n' };
-                string nameToShow = fileName.TrimEnd(charsToTrim);
-                restoreGameToolStripMenuItem.DropDownItems.Add(nameToShow);
-                saveGameToolStripMenuItem.DropDownItems.Add(nameToShow);
+                try
+                {
+                    SaveGame gameData = new SaveGame(player1Name, player2Name, Convert.ToInt32(lblP1Tokens.Text), Convert.ToInt32(lblP2Tokens.Text), currentPlayer, speakToolStripMenuItem.Checked, informationPanelToolStripMenuItem.Checked, boardData, fileName);
+                    gameData.writeData(gameData);
+                    MessageBox.Show("File successfully saved!");
+                    char[] charsToTrim = { '.', 'j', 's', 'o', 'n' };
+                    string nameToShow = fileName.TrimEnd(charsToTrim);
+                    restoreGameToolStripMenuItem.DropDownItems.Add(nameToShow);
+                    saveGameToolStripMenuItem.DropDownItems.Add(nameToShow);
+                }
+                catch (Exception exception)
+                {
+                    DialogResult result = MessageBox.Show(exception.ToString(), "Error in saving game state", MessageBoxButtons.OK);
+                    this.Close();
+                }
             }
             else
             {
@@ -416,7 +424,7 @@ namespace O_Neillo
 
         /// <summary>
         /// Method <c>newGameToolStripMenuItem_Click</c> runs when the user selects the 'New Game' option on the menu strip. It asks the user to confirm.
-        /// Once they confirm, it will close the current game form, and open a new one with the starting settings and elements
+        /// Once they confirm, it will close the current game form, and open a new one with the starting settings and components
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -426,10 +434,18 @@ namespace O_Neillo
                 "you have saved this game if you would like to return to it, if so click yes to start new game","Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
-                this.Hide();
-                FrmGame NewGame = new FrmGame();
-                NewGame.ShowDialog();
-                this.Close();
+                try
+                {
+                    this.Hide();
+                    FrmGame NewGame = new FrmGame();
+                    NewGame.ShowDialog();
+                    this.Close();
+                }
+                catch (Exception exception)
+                {
+                    DialogResult result2 = MessageBox.Show(exception.ToString(), "Error in creating a new game", MessageBoxButtons.OK);
+                    this.Close();
+                }
             }
         }
 
@@ -465,43 +481,53 @@ namespace O_Neillo
 
         /// <summary>
         /// Method <c>restoreGameToolStripMenuItem_DropDownItemClicked</c> when the user selects a saved game to restore
-        /// The game data is retrieved and deserialized into a new SaveGame object, from which the data is read into elements on the new form for the restored game
-        /// Once the data is read into the elements and the components are correctly set, the current form is closed and a new instance of FrmGame
+        /// The game data is retrieved and deserialized into a new SaveGame object, from which the data is read into components on the new form for the restored game
+        /// Once the data is read into the components and the components are correctly set, the current form is closed and a new instance of FrmGame
         /// with the restored game data is shown
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void restoreGameToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            this.Hide();
-            FrmGame NewGame = new FrmGame();
-            string fileName = e.ClickedItem.Text;
-            string pathToFile = Directory.GetCurrentDirectory() + @"\" + fileName + ".json";
-            string jsonString = File.ReadAllText(pathToFile);
-            SaveGame deserializedGame = JsonConvert.DeserializeObject<SaveGame>(jsonString);
-            NewGame.txtPlayer1.Text = deserializedGame.p1Name;
-            NewGame.txtPlayer2.Text = deserializedGame.p2Name;
-            NewGame.lblP1Tokens.Text = Convert.ToString(deserializedGame.p1TokenNum);
-            NewGame.lblP2Tokens.Text = Convert.ToString(deserializedGame.p2TokenNum);
-            NewGame.speakToolStripMenuItem.Checked = deserializedGame.speechTicked;
-            NewGame.informationPanelToolStripMenuItem.Checked = deserializedGame.infoPanelTicked;
-            if (deserializedGame.nextPlayerNum == 0)
+            try
             {
-                NewGame.lblPlayer1Turn.Show();
-                NewGame.lblPlayer2Turn.Hide();
+                this.Hide();
+                FrmGame NewGame = new FrmGame();
+                string fileName = e.ClickedItem.Text;
+                string pathToFile = Directory.GetCurrentDirectory() + @"\" + fileName + ".json";
+                string jsonString = File.ReadAllText(pathToFile);
+                SaveGame deserializedGame = JsonConvert.DeserializeObject<SaveGame>(jsonString);
+                NewGame.txtPlayer1.Text = deserializedGame.p1Name;
+                NewGame.txtPlayer2.Text = deserializedGame.p2Name;
+                NewGame.lblP1Tokens.Text = Convert.ToString(deserializedGame.p1TokenNum);
+                NewGame.lblP2Tokens.Text = Convert.ToString(deserializedGame.p2TokenNum);
+                NewGame.speakToolStripMenuItem.Checked = deserializedGame.speechTicked;
+                NewGame.informationPanelToolStripMenuItem.Checked = deserializedGame.infoPanelTicked;
+                if (deserializedGame.nextPlayerNum == 0)
+                {
+                    NewGame.lblPlayer1Turn.Show();
+                    NewGame.lblPlayer2Turn.Hide();
+                }
+                else
+                {
+                    NewGame.lblPlayer1Turn.Hide();
+                    NewGame.lblPlayer2Turn.Show();
+                }
+                NewGame.boardData = deserializedGame.boardState;
+                NewGame.txtPlayer1.ReadOnly = true;
+                NewGame.txtPlayer2.ReadOnly = true;
+                NewGame.btnStartGame.Hide();
+                NewGame.board.UpdateBoardGui(boardData);
+                NewGame.ShowDialog();
+                this.Close();
             }
-            else
+            catch (Exception exception)
             {
-                NewGame.lblPlayer1Turn.Hide();
-                NewGame.lblPlayer2Turn.Show();
+
+                DialogResult result = MessageBox.Show(exception.ToString(), "Error in restoring game", MessageBoxButtons.OK);
+                this.Close();
             }
-            NewGame.boardData = deserializedGame.boardState;
-            NewGame.txtPlayer1.ReadOnly = true;
-            NewGame.txtPlayer2.ReadOnly = true;
-            NewGame.btnStartGame.Hide();
-            NewGame.board.UpdateBoardGui(boardData);
-            NewGame.ShowDialog();
-            this.Close();
+            
         }
 
         /// <summary>
@@ -511,35 +537,44 @@ namespace O_Neillo
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void saveGameToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e) //when player selects game state from save game sub-menu i.e. to overwrite
+        private void saveGameToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             DialogResult result = MessageBox.Show("By selecting this option, you are overwriting the data of the selected file, the file name will remain the same. Please select yes to confirm this, select no to go back", "Confirmation", MessageBoxButtons.YesNo);
             if (result == DialogResult.Yes)
             {
-                string fileName;
-                fileName = Convert.ToString(e.ClickedItem.Text);
-                string pathToFile = Directory.GetCurrentDirectory() + @"\" + fileName + ".json";
-                File.Delete(pathToFile);
-                int nextPlayer;
-                if (currentPlayer == 0)
+                try
                 {
-                    nextPlayer = 1;
+                    string fileName;
+                    fileName = Convert.ToString(e.ClickedItem.Text);
+                    string pathToFile = Directory.GetCurrentDirectory() + @"\" + fileName + ".json";
+                    File.Delete(pathToFile);
+                    int nextPlayer;
+                    if (currentPlayer == 0)
+                    {
+                        nextPlayer = 1;
+                    }
+                    else
+                    {
+                        nextPlayer = 0;
+                    }
+                    if (txtPlayer1.Text == "Player #1")
+                    {
+                        player1Name = "Player #1";
+                    }
+                    if (txtPlayer2.Text == "Player #2")
+                    {
+                        player2Name = "Player #2";
+                    }
+                    SaveGame gameData = new SaveGame(player1Name, player2Name, Convert.ToInt32(lblP1Tokens.Text), Convert.ToInt32(lblP2Tokens.Text), nextPlayer, speakToolStripMenuItem.Checked, informationPanelToolStripMenuItem.Checked, boardData, fileName + ".json");
+                    gameData.writeData(gameData);
+                    MessageBox.Show("File successfully overwritten!");
                 }
-                else
+                catch (Exception exception)
                 {
-                    nextPlayer = 0;
+
+                    DialogResult result2 = MessageBox.Show(exception.ToString(), "Error in overwriting", MessageBoxButtons.OK);
+                    this.Close();
                 }
-                if (txtPlayer1.Text=="Player #1")
-                {
-                    player1Name = "Player #1";
-                }
-                if (txtPlayer2.Text=="Player #2")
-                {
-                    player2Name = "Player #2";
-                }
-                SaveGame gameData = new SaveGame(player1Name, player2Name, Convert.ToInt32(lblP1Tokens.Text), Convert.ToInt32(lblP2Tokens.Text), nextPlayer, speakToolStripMenuItem.Checked, informationPanelToolStripMenuItem.Checked, boardData, fileName+".json");
-                gameData.writeData(gameData);
-                MessageBox.Show("File successfully overwritten!");
             }
             
         }
