@@ -5,4 +5,6 @@ The application contains 5 .cs files, 3 of which contain the code for the 3 form
 
 O'Neillo is written with an object-oriented approach and uses a 2-dimensional array in order to create, manipulate and display the game board. The application also uses the NewtonSoft.Json nuget for serialization and deserialization of saved game states, plus the System.Speech nuget in order to give users the option to have the moves and who they are made by read out, improving the accessibility of the game and therefore appealing to a wider audience and tailoring to their needs.
 
-The application can be run by accessing it via Visual Studio and using the start option in this, or as an isolated application through the application file within the 'Debug' folder of this project.
+The application can be run by accessing it via Visual Studio and using the start option in this or as an isolated application through the application file within the 'Debug' folder of this project.
+Link to the public GitHub repository: https://github.com/eshaal-khan/O-Neillo
+
