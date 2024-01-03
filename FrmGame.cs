@@ -65,78 +65,6 @@ namespace O_Neillo
             txtPlayer2.ReadOnly = true;
             btnStartGame.Hide();
         }
-        /// <summary>
-        /// Method <c>aboutToolStripMenuItem_Click</c> opens the about page (frmAbout) when that option is selected from the sub menu of 'Help' on the menu strip
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            frmAbout aboutPage = new frmAbout();
-            aboutPage.ShowDialog();
-        }
-        /// <summary>
-        /// Method<c>informationPanelToolStripMenuItem_Click</c> hides and shows the information panel components depending on the state of the checkbox
-        /// (checked = show all the components, unchecked= hide all the components)
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void informationPanelToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (informationPanelToolStripMenuItem.Checked == true)
-            {
-                informationPanelToolStripMenuItem.Checked = false;
-                lblPlayer1Turn.Hide();
-                lblPlayer2Turn.Hide();
-                lblP1Tokens.Hide();
-                lblP2Tokens.Hide();
-                txtPlayer1.Hide();
-                txtPlayer2.Hide();
-                pbxBlackIcon.Hide();
-                pbxWhiteIcon.Hide();
-                pbxPanel.Hide();
-            }
-            else
-            {
-                informationPanelToolStripMenuItem.Checked = true;
-                lblPlayer1Turn.Show();
-                lblPlayer2Turn.Show();
-                lblP1Tokens.Show();
-                lblP2Tokens.Show();
-                txtPlayer1.Show();
-                txtPlayer2.Show();
-                pbxBlackIcon.Show();
-                pbxWhiteIcon.Show();
-                pbxPanel.Show();
-            }
-        }
-        /// <summary>
-        /// Method <c>speakToolStripMenuItem_Click</c> turns the speech function on and off depending on state of the checkbox.
-        /// If it is checked, it will read a message indicating it is on
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void speakToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (speakToolStripMenuItem.Checked == true)
-            {
-                speakToolStripMenuItem.Checked = false;
-            }
-            else
-            {
-                speakToolStripMenuItem.Checked = true;
-                var synthesizer = new SpeechSynthesizer();
-                synthesizer.Speak("Speech is now on, after every move the name of the player who has just completed their turn, followed by " +
-                    "the row and column number of the space where they have placed will be read out");
-            }
-        }
-        /// <summary>
-        /// Method <c>FrmGame</c> opens the main game form, which includes several things. It retrieves the names of the currently stored game states to display
-        /// on the save game sub-menu (for overwriting) and restore game sub-menu, it also sets the initial values for components including the textboxes,
-        /// labels used to count the amount of coloured tokens and showing/hiding the correct labels to indicate that Player 1 starts.
-        /// It will ensure both textboxes are intially not read-only, and also creates a new GameBoardImageArray object to show the board, and sets up the
-        /// TileClicked event. It also includes some exception handling to manage errors with the size.
-        /// </summary>
         public FrmGame() //set inital display & view of all components -> labels, board, textboxes, speech & panel options, drop down file names
         {
             InitializeComponent();
@@ -382,6 +310,79 @@ namespace O_Neillo
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+
+        /// <summary>
+        /// Method <c>aboutToolStripMenuItem_Click</c> opens the about page (frmAbout) when that option is selected from the sub menu of 'Help' on the menu strip
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmAbout aboutPage = new frmAbout();
+            aboutPage.ShowDialog();
+        }
+        /// <summary>
+        /// Method<c>informationPanelToolStripMenuItem_Click</c> hides and shows the information panel components depending on the state of the checkbox
+        /// (checked = show all the components, unchecked= hide all the components)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void informationPanelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (informationPanelToolStripMenuItem.Checked == true)
+            {
+                informationPanelToolStripMenuItem.Checked = false;
+                lblPlayer1Turn.Hide();
+                lblPlayer2Turn.Hide();
+                lblP1Tokens.Hide();
+                lblP2Tokens.Hide();
+                txtPlayer1.Hide();
+                txtPlayer2.Hide();
+                pbxBlackIcon.Hide();
+                pbxWhiteIcon.Hide();
+                pbxPanel.Hide();
+            }
+            else
+            {
+                informationPanelToolStripMenuItem.Checked = true;
+                lblPlayer1Turn.Show();
+                lblPlayer2Turn.Show();
+                lblP1Tokens.Show();
+                lblP2Tokens.Show();
+                txtPlayer1.Show();
+                txtPlayer2.Show();
+                pbxBlackIcon.Show();
+                pbxWhiteIcon.Show();
+                pbxPanel.Show();
+            }
+        }
+        /// <summary>
+        /// Method <c>speakToolStripMenuItem_Click</c> turns the speech function on and off depending on state of the checkbox.
+        /// If it is checked, it will read a message indicating it is on
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void speakToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (speakToolStripMenuItem.Checked == true)
+            {
+                speakToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                speakToolStripMenuItem.Checked = true;
+                var synthesizer = new SpeechSynthesizer();
+                synthesizer.Speak("Speech is now on, after every move the name of the player who has just completed their turn, followed by " +
+                    "the row and column number of the space where they have placed will be read out");
+            }
+        }
+        /// <summary>
+        /// Method <c>FrmGame</c> opens the main game form, which includes several things. It retrieves the names of the currently stored game states to display
+        /// on the save game sub-menu (for overwriting) and restore game sub-menu, it also sets the initial values for components including the textboxes,
+        /// labels used to count the amount of coloured tokens and showing/hiding the correct labels to indicate that Player 1 starts.
+        /// It will ensure both textboxes are intially not read-only, and also creates a new GameBoardImageArray object to show the board, and sets up the
+        /// TileClicked event. It also includes some exception handling to manage errors with the size.
+        /// </summary>
         private void saveGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (restoreGameToolStripMenuItem.DropDownItems.Count<5) 
